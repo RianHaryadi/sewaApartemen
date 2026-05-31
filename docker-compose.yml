@@ -1,0 +1,38 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: araia_app
+    restart: always
+    ports:
+      - "8085:80"
+    volumes:
+      - .env:/var/www/html/.env
+    depends_on:
+      - db
+    networks:
+      - araia_network
+
+  db:
+    image: mysql:8.0
+    container_name: araia_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: araia_db
+      MYSQL_ROOT_PASSWORD: root_password_here
+      MYSQL_USER: araia_user
+      MYSQL_PASSWORD: araia_password_here
+    ports:
+      - "33061:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - araia_network
+
+volumes:
+  db_data:
+
+networks:
+  araia_network:
+    driver: bridge
